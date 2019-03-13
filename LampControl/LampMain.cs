@@ -20,47 +20,39 @@ namespace LampControl
 
         public LampMain()
         {
-            _timer = new Timer(1000) {AutoReset = true};
+            _timer = new Timer(10000) {AutoReset = true};
             _timer.Elapsed += LampLogic;
         }
 
         static void LampLogic(object sender, ElapsedEventArgs e)
         {
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new LampControlForm());
-            var lightState = false;
-            var counter = 0;
-            //while (true)
-            //{
-                ApiHelper.InitializeClient();
-                var weather = WeatherProcessor.LoadWeather();
-                DateTime sunrise = SunReport.UnixTimeStampToDateTime(weather.Result.Sys.Sunrise);
-                DateTime sunset = SunReport.UnixTimeStampToDateTime(weather.Result.Sys.Sunset).AddHours(-1);
-                var clouds = weather.Result.Clouds.All;
+            ApiHelper.InitializeClient();
+            var weather = WeatherProcessor.LoadWeather();
+            DateTime sunrise = SunReport.UnixTimeStampToDateTime(weather.Result.Sys.Sunrise);
+            DateTime sunset = SunReport.UnixTimeStampToDateTime(weather.Result.Sys.Sunset).AddHours(-1);
+            var clouds = weather.Result.Clouds.All;
                 
                 Console.Clear();
-                Console.WriteLine("Cycle: " + (counter++) + " System Time: " + System.DateTime.Now);
+                Console.WriteLine("System Time: " + System.DateTime.Now);
                 Console.WriteLine("Sunset: " + sunset);
                 Console.WriteLine("Sunrise: " + sunrise);
                 Console.WriteLine("Cloudiness: " + clouds);
 
-                if ((System.DateTime.Now > sunset || clouds > 95 || System.DateTime.Now < sunrise) && !lightState)
-                {
-                    LampWebCommands.LightOn(out lightState, clouds, sunset);
-                }
-                else if (System.DateTime.Now >= sunrise && System.DateTime.Now <= sunset && clouds <= 95)
-                {
-                    LampWebCommands.LightOff(out lightState, clouds, sunset);
-                }
-                else
-                {
-                    Console.WriteLine("No Changes");
-                }
-
-                Console.WriteLine(" ");
-                Thread.Sleep(1000);
-            //}
+            if (System.DateTime.Now > sunset || clouds > 95 || System.DateTime.Now < sunrise)
+            {
+                LampWebCommands.LightOn(clouds, sunset);
+                string[] on = new string[]{"on"};
+                File.AppendAllLines(@"C:\Temp\Demos\log.txt", on);
+            }
+            else if (System.DateTime.Now >= sunrise && System.DateTime.Now <= sunset && clouds <= 95)
+            {
+                LampWebCommands.LightOff(clouds, sunset);
+                string[] off = new string[] { "off" };
+                File.AppendAllLines(@"C:\Temp\Demos\log.txt", off);
+            }
+            string[] lines = new string[] { "System Time: " + System.DateTime.Now + "\n" + "Sunset: " + sunset + "\n" + "Sunrise: " + sunrise + "\n" + "Cloudiness: " + clouds + "\n" };
+            //Console.WriteLine(" ");
+            File.AppendAllLines(@"C:\Temp\Demos\log.txt", lines);
         }
 
         public void Start()
