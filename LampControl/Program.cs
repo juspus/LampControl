@@ -9,7 +9,7 @@ namespace LampControl
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) // Main method for running program as a service using Topshelf
         {
             var exitCode = HostFactory.Run(x =>
                 {

@@ -59,13 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="ArpEntity.cs" />
+    <Compile Include="ArpGet.cs" />
     <Compile Include="CloudReport.cs" />
-    <Compile Include="LampControlForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LampControlForm.Designer.cs">
-      <DependentUpon>LampControlForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="LampWebCommands.cs" />
     <Compile Include="LampMain.cs" />
     <Compile Include="Program.cs" />
@@ -78,11 +74,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="LampControlForm.resx">
-      <DependentUpon>LampControlForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

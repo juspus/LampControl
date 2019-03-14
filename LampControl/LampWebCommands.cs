@@ -9,30 +9,22 @@ namespace LampControl
 {
     public class LampWebCommands
     {
-        public static void LightOn( int clouds, DateTime sunset)
+        public static void LightOn()
         {
             HttpWebRequest lightOn = (HttpWebRequest)WebRequest.Create("http://192.168.0.22/lightsOFF");
             lightOn.Timeout = 10000;
             HttpWebResponse lightOnResp = (HttpWebResponse)lightOn.GetResponse();
             lightOn.Abort();
-            if (lightOnResp.StatusCode.ToString() == "OK")
-            {
-               // Console.WriteLine("LightOn " + clouds + " " + DateTime.Now + " " + sunset);
-                Console.WriteLine("LightOn " + clouds + " " + DateTime.Now + " " + sunset);
-            }
+            if (lightOnResp.StatusCode.ToString() == "OK") { Console.WriteLine("LightOn "); }
         }
 
-        public static void LightOff(int clouds, DateTime sunset)
+        public static void LightOff()
         {
             HttpWebRequest lightOff = (HttpWebRequest)WebRequest.Create("http://192.168.0.22/lightsON");
             lightOff.Timeout = 10000;
             HttpWebResponse lightOffResp = (HttpWebResponse)lightOff.GetResponse();
             lightOff.Abort();
-            if (lightOffResp.StatusCode.ToString() == "OK")
-            {
-               // Console.WriteLine("LightOff");
-                Console.WriteLine("LightOff");
-            }
+            if (lightOffResp.StatusCode.ToString() == "OK") { Console.WriteLine("LightOff"); }
         }
     }
 }
