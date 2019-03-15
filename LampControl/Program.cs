@@ -19,7 +19,7 @@ namespace LampControl
                         s.WhenStarted(lamp => lamp.Start());
                         s.WhenStopped(lamp => lamp.Stop());
                     });
-                    x.RunAsLocalSystem();
+                    x.RunAsNetworkService();
 
                     x.SetServiceName("LampService");
                     x.SetDisplayName("Lamp Service");

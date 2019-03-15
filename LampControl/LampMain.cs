@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,17 +27,20 @@ namespace LampControl
 
         static void LampLogic(object sender, ElapsedEventArgs e)
         {
+            new LogWriter("\n" + "*******************************" + "\n" + "Task Started" + "\n" +
+                          "*******************************");
             ApiHelper.InitializeClient();
-            Console.SetWindowSize(35, 6);
-            Console.Clear();
+            new LogWriter( "Api Client Initialized");
+            
             var weather = WeatherProcessor.LoadWeather();
             DateTime sunrise = SunReport.UnixTimeStampToDateTime(weather.Result.Sys.Sunrise);
             DateTime sunset = SunReport.UnixTimeStampToDateTime(weather.Result.Sys.Sunset).AddHours(-1);
             var clouds = weather.Result.Clouds.All;
+            new LogWriter("Api Values got");
 
             if (!ArpGet.PingHost("192.168.0.88"))
             {
-                Console.WriteLine("Neranda IP");
+                new LogWriter("IP Not Found/Couldn't ping");
                 LampWebCommands.LightOff();
                 return;
             }
@@ -50,36 +54,41 @@ namespace LampControl
             //    return;
             //}
             
-            Console.WriteLine("System Time: " + System.DateTime.Now);
-            Console.WriteLine("Sunset: " + sunset);
-            Console.WriteLine("Sunrise: " + sunrise);
-            Console.WriteLine("Cloudiness: " + clouds);
+            new LogWriter("Sunset: " + sunset );
+            new LogWriter("Sunrise: " + sunrise);
+            new LogWriter("Cloudiness: " + clouds);
 
             if (System.DateTime.Now > sunset || clouds > 95 || System.DateTime.Now < sunrise)
             {
                 LampWebCommands.LightOn();
-                //string[] on = new string[]{"on"};
-                //File.AppendAllLines(@"C:\Temp\Demos\log.txt", on);
             }
             else if (System.DateTime.Now >= sunrise && System.DateTime.Now <= sunset && clouds <= 95)
             {
                 LampWebCommands.LightOff();
-                //string[] off = new string[] { "off" };
-                //File.AppendAllLines(@"C:\Temp\Demos\log.txt", off);
             }
-            //string[] lines = new string[] { "System Time: " + System.DateTime.Now + "\n" + "Sunset: " + sunset + "\n" + "Sunrise: " + sunrise + "\n" + "Cloudiness: " + clouds + "\n" };
-            //File.AppendAllLines(@"C:\Temp\Demos\log.txt", lines);
         }
 
         public void Start()
         {
             _timer.Start();
+            string m_exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            try
+            {
+                File.Create(m_exePath + "\\" + "LampControl.log").Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            
+            new LogWriter("\n" + "*******************************" + "\n" + "Service STARTED successfully" + "\n" +
+                          "*******************************");
         }
 
         public void Stop()
         {
             _timer.Stop();
+            new LogWriter("\n" + "*******************************" + "\n" + "Service STOPPED successfully" + "\n" +
+                          "*******************************");
         }
-
     }
 }

@@ -15,7 +15,7 @@ namespace LampControl
             lightOn.Timeout = 10000;
             HttpWebResponse lightOnResp = (HttpWebResponse)lightOn.GetResponse();
             lightOn.Abort();
-            if (lightOnResp.StatusCode.ToString() == "OK") { Console.WriteLine("LightOn "); }
+            if (lightOnResp.StatusCode.ToString() == "OK") { new LogWriter("LightOn "); }
         }
 
         public static void LightOff()
@@ -24,7 +24,7 @@ namespace LampControl
             lightOff.Timeout = 10000;
             HttpWebResponse lightOffResp = (HttpWebResponse)lightOff.GetResponse();
             lightOff.Abort();
-            if (lightOffResp.StatusCode.ToString() == "OK") { Console.WriteLine("LightOff"); }
+            if (lightOffResp.StatusCode.ToString() == "OK") { new LogWriter("LightOff"); }
         }
     }
 }
