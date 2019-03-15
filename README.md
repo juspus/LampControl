@@ -15,4 +15,4 @@ Atributes:
 
 # Troubleshooting
 - Access denied when trying to run the service
-Give all persmissions to NETWORK SERVICE user on LampControl directory.
+  - Give all persmissions to NETWORK SERVICE user on LampControl directory.
